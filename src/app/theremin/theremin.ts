@@ -15,6 +15,7 @@ export class Theremin implements AfterViewInit {
   @ViewChild('video', {static: true}) videoEl!: ElementRef<HTMLVideoElement>;
   @ViewChild('overlay', {static: true}) canvasEl!: ElementRef<HTMLCanvasElement>;
 
+  audioMode: 'web' | 'strudel' = 'web';
 
   useFront = true;
   waveform: OscillatorType = 'sawtooth';
@@ -49,7 +50,14 @@ export class Theremin implements AfterViewInit {
     try {
       await this.tracker.startCamera(this.videoEl.nativeElement, this.useFront);
       await this.tracker.initHandLandmarker();
-      this.audio.start(this.waveform);
+
+      // start/stop WebAudio depending on current mode
+      if (this.audioMode === 'web') this.audio.start(this.waveform);
+      else this.audio.stop();
+
+      // ensure Strudel evaluates at least once (also works after you edit + Ctrl+Enter)
+      this.evalStrudelIfAvailable();
+
       this.started = true;
       cancelAnimationFrame(this.raf);
       this.loop();
@@ -103,23 +111,31 @@ export class Theremin implements AfterViewInit {
       const sy = this.tracker.smoothY(rawY, k);
       (window as any).thereminX = sx;
       (window as any).thereminY = sy;
-
+      (window as any).thereminMode = this.audioMode;
 
       this.drawHUD(ctx, canvas, lm, sx, sy);
 
 
-// Map Y -> pitch, X -> gain
+      // Map Y -> pitch, X -> gain
       const midi = 40 + (1 - sy) * this.pitchRange;
       const freq = this.audio.midiToFreq(midi);
       const g = Math.max(0, Math.min(1, sx)) * this.gainMax;
 
+      // WebAudio path only if mode=web
+      if (this.audioMode === 'web') {
+        const now = this.audio['ctx']?.currentTime ?? undefined;
+        this.audio.update(freq, g);
+      } else {
+        // ensure WebAudio is quiet when in strudel mode
+        this.audio.update(null, 0);
+      }
 
-      this.audio.update(freq, g);
       this.freqDisp = freq.toFixed(1);
       this.midiDisp = midi.toFixed(1);
       this.gainPct = Math.round(Math.max(0, Math.min(1, sx)) * 100);
     } else {
       this.hands = 0;
+      (window as any).thereminMode = this.audioMode;
       this.audio.update(null, 0);
       this.freqDisp = this.midiDisp = '–';
       this.gainPct = 0;
@@ -155,7 +171,7 @@ export class Theremin implements AfterViewInit {
       ctx.arc(p.x * W, p.y * H, 3, 0, Math.PI * 2);
       ctx.fill();
     }
-    const x = nx * W, y = ny * H;
+    const x = (1 - nx) * W, y = ny * H;
     ctx.beginPath();
     ctx.arc(x, y, 10, 0, Math.PI * 2);
     ctx.stroke();
@@ -173,5 +189,30 @@ export class Theremin implements AfterViewInit {
     ctx.setLineDash([]);
     ctx.globalAlpha = 1;
     ctx.restore();
+  }
+
+  private get strudelEl(): any {
+    return document.querySelector('strudel-editor') as any;
+  }
+
+  private evalStrudelIfAvailable() {
+    try {
+      this.strudelEl?.editor?.evaluate?.();
+      this.strudelEl?.editor?.start();
+    } catch {
+    }
+  }
+
+  setWaveform(type: OscillatorType) {
+    this.waveform = type;
+    if (this.audioMode === 'web') this.audio.setType(type);
+  }
+
+  onAudioModeChange() {
+    // publish the current mode for Strudel to read
+    (window as any).thereminMode = this.audioMode;
+    if (this.audioMode === 'web') this.audio.start(this.waveform);
+    else this.audio.stop();
+    this.evalStrudelIfAvailable();
   }
 }

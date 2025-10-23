@@ -1,6 +1,17 @@
 <div class="controls">
+  <!-- Mode switch -->
+  <label>
+    <input type="radio" name="mode" [(ngModel)]="audioMode" value="web" (change)="onAudioModeChange()">
+    WebAudio (Oscillator)
+  </label>
+  <label>
+    <input type="radio" name="mode" [(ngModel)]="audioMode" value="strudel" (change)="onAudioModeChange()">
+    Strudel only
+  </label>
+
+  <!-- Waveform now calls setWaveform() to only touch osc in web mode -->
   <label>Waveform
-    <select (change)="audio.setType(waveform)" [(ngModel)]="waveform">
+    <select [(ngModel)]="waveform" (change)="setWaveform(waveform)">
       <option value="sine">sine</option>
       <option value="sawtooth">sawtooth</option>
       <option value="triangle">triangle</option>

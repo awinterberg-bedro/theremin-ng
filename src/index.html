@@ -6,25 +6,16 @@
   <base href="/">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <link href="favicon.ico" rel="icon" type="image/x-icon">
-  <script src="https://unpkg.com/@strudel/repl@latest"></script>
+  <script src="/assets/strudel-repl/index.mjs" type="module"></script>
 </head>
 <body>
-<app-root></app-root>
 <strudel-editor>
   <!--
   setcps(1)
-  // Pull values from the Angular theremin loop
-  const x = await js(() => window.thereminX ?? 0.5)
-  const y = await js(() => window.thereminY ?? 0.5)
 
-
-  // X -> gain, Y (inverted) -> pitch over 'pitchRange' semitones
-  const pr = 48
-  $: note(40 + (1 - y).range(0, pr))
-  .sound('sawtooth')
-  .gain(x.range(0.1, 0.9))
-  .release(0.2)
   -->
 </strudel-editor>
+<app-root></app-root>
+
 </body>
 </html>
