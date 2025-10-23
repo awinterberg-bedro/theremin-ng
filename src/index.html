@@ -5,13 +5,17 @@
   <title>ThemerinNg</title>
   <base href="/">
   <meta content="width=device-width, initial-scale=1" name="viewport">
-  <link href="favicon.ico" rel="icon" type="image/x-icon">
-  <script src="/assets/strudel-repl/index.mjs" type="module"></script>
+  <link href="./assets/favicon.ico" rel="icon" type="image/x-icon">
+  <script src="./assets/strudel-repl/index.mjs" type="module"></script>
 </head>
 <body>
 <strudel-editor>
   <!--
-  setcps(1)
+setcps(1)
+const sli = slider(0,0,4000)
+const theX = thereminX(2000,0,20000)
+const theY = thereminY(0.5,0,1)
+n("0 1 2 2 5").scale("C:minor").sound("sawtooth").lpf(theX).gain(theY)
 
   -->
 </strudel-editor>

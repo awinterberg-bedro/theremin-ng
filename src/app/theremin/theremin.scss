@@ -29,7 +29,6 @@
   }
 
   .stats {
-    margin-left: auto;
     color: #9fb0ff
   }
 }
@@ -42,6 +41,7 @@
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, .4);
+  align-items: center;
 
   video, canvas {
     position: absolute;

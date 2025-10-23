@@ -24,6 +24,7 @@ export class Theremin implements AfterViewInit {
   pitchRange = 48; // semitones
 
 
+  strudelRunning = false;
   started = false;
   hands = 0;
   freqDisp = '–';
@@ -55,9 +56,6 @@ export class Theremin implements AfterViewInit {
       if (this.audioMode === 'web') this.audio.start(this.waveform);
       else this.audio.stop();
 
-      // ensure Strudel evaluates at least once (also works after you edit + Ctrl+Enter)
-      this.evalStrudelIfAvailable();
-
       this.started = true;
       cancelAnimationFrame(this.raf);
       this.loop();
@@ -72,6 +70,15 @@ export class Theremin implements AfterViewInit {
     cancelAnimationFrame(this.raf);
     this.audio.stop();
     this.tracker.stopCamera();
+
+    const video = this.videoEl.nativeElement;
+    try {
+      video.pause();
+      (video as any).srcObject = null;
+      video.removeAttribute('src');
+      video.load();
+    } catch (e) {}
+
     const ctx = this.canvasEl.nativeElement.getContext('2d')!;
     ctx.clearRect(0, 0, this.canvasEl.nativeElement.width, this.canvasEl.nativeElement.height);
     this.hands = 0;
@@ -112,6 +119,8 @@ export class Theremin implements AfterViewInit {
       (window as any).thereminX = sx;
       (window as any).thereminY = sy;
       (window as any).thereminMode = this.audioMode;
+      const e = new CustomEvent('theremin', {detail: {x: sx, y: sy, mode: this.audioMode}});
+      window.dispatchEvent(e)
 
       this.drawHUD(ctx, canvas, lm, sx, sy);
 
@@ -199,6 +208,15 @@ export class Theremin implements AfterViewInit {
     try {
       this.strudelEl?.editor?.evaluate?.();
       this.strudelEl?.editor?.start();
+      this.strudelRunning = true;
+    } catch {
+    }
+  }
+
+  private stopStrudelIfAvailable() {
+    try {
+      this.strudelEl?.editor?.stop();
+      this.strudelRunning = false;
     } catch {
     }
   }
@@ -211,8 +229,12 @@ export class Theremin implements AfterViewInit {
   onAudioModeChange() {
     // publish the current mode for Strudel to read
     (window as any).thereminMode = this.audioMode;
-    if (this.audioMode === 'web') this.audio.start(this.waveform);
-    else this.audio.stop();
-    this.evalStrudelIfAvailable();
+    if (this.audioMode === 'web') {
+      this.audio.start(this.waveform);
+      this.stopStrudelIfAvailable()
+    } else {
+      this.audio.stop();
+      this.evalStrudelIfAvailable();
+    }
   }
 }
