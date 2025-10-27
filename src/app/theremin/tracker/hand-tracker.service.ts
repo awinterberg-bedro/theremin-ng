@@ -17,7 +17,7 @@ export class HandTrackerService {
   async startCamera(video: HTMLVideoElement, useFront = true) {
     if (this.stream) return;
     this.stream = await navigator.mediaDevices.getUserMedia({
-      video: {facingMode: useFront ? 'user' : 'environment', width: {ideal: 1280}, height: {ideal: 720}},
+      video: {facingMode: useFront ? 'user' : 'environment', width: {ideal: 1920}, height: {ideal: 1080}},
       audio: false
     });
     video.srcObject = this.stream;

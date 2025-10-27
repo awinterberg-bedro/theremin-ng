@@ -9,17 +9,22 @@
   <script src="./assets/strudel-repl/index.mjs" type="module"></script>
 </head>
 <body>
-<strudel-editor>
-  <!--
-setcps(1)
-const sli = slider(0,0,4000)
-const theX = thereminX(2000,0,20000)
-const theY = thereminY(0.5,0,1)
-n("0 1 2 2 5").scale("C:minor").sound("sawtooth").lpf(theX).gain(theY)
-
-  -->
-</strudel-editor>
-<app-root></app-root>
+<div class="container">
+  <section class="pane top">
+    <strudel-editor>
+      <!--
+    setcps(1)
+    const sli = slider(0,0,4000)
+    const theX = thereminX(2000,0,20000)
+    const theY = thereminY(0.5,0,1)
+    n("0 1 2 2 5").scale("C:minor").sound("sawtooth").lpf(theX).gain(theY)
+      -->
+    </strudel-editor>
+  </section>
+  <section class="pane bottom">
+    <app-root></app-root>
+  </section>
+</div>
 
 </body>
 </html>

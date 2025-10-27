@@ -15,7 +15,7 @@ export class AudioService {
    */
   start(type: OscillatorType = 'sawtooth') {
     if (this.ctx) return;
-    this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    this.ctx = new AudioContext();
     this.osc = this.ctx.createOscillator();
     this.gain = this.ctx.createGain();
     this.osc.type = type;

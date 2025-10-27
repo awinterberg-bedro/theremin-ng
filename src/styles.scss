@@ -1,4 +1,56 @@
-/* You can add global styles to this file, and also import other style files */
-app-root {
-  height: 50%;
+/* Make the page fill the viewport */
+html, body { height: 100%; margin: 0; }
+
+/* Split view */
+.container {
+  display: flex;
+  height: 100vh;        /* full height */
+  overflow: hidden;     /* prevent page scrollbars */
+}
+
+/* Both panes, 50/50 */
+.pane {
+  flex: 0 0 50%;
+  display: flex;        /* so children can stretch vertically */
+  flex-direction: column;
+  min-height: 0;        /* <-- crucial for scroll inside flex items */
+  min-width: 0;
+}
+
+/* LEFT: Strudel editor column should scroll */
+.pane.top {
+  overflow: hidden;     /* the inner scroller will handle the scroll */
+}
+
+/* Make <strudel-editor> fill the pane */
+.pane.top strudel-editor {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* CodeMirror sizing + scrolling */
+.pane.top .cm-editor {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+.pane.top .cm-scroller {
+  /* this is the actual scroll area */
+  overflow: auto !important;
+  height: 100%;
+}
+
+/* RIGHT pane – keep your app as-is */
+.pane.bottom {
+  overflow: auto;  /* or hidden, your choice */
+}
+
+/* Optional: stack on small screens */
+@media (max-width: 900px) {
+  .container { flex-direction: column; }
+  .pane { flex: 0 0 auto; width: 100%; min-height: 50vh; }
 }

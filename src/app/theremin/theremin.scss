@@ -32,10 +32,26 @@
     color: #9fb0ff
   }
 }
+.buttons {
+  padding: 6px 10px;
+
+  select, input[type="range"], button {
+    background: #121a3a;
+    color: #fff;
+    border: 1px solid #22306e;
+    border-radius: 12px;
+    padding: 6px 10px;
+  }
+
+  button:hover {
+    border-color: #3a55dd
+  }
+
+}
 
 .stage {
   position: relative;
-  width: min(960px, 95vw);
+  width: 100%;
   aspect-ratio: 16/9;
   background: #000;
   border-radius: 16px;
