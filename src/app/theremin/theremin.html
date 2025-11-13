@@ -1,0 +1,46 @@
+<div style="display: flex">
+  <div class="controls">
+    <!-- Mode switch -->
+    <label>
+      <input type="radio" name="mode" [(ngModel)]="audioMode" value="web" (change)="onAudioModeChange()">
+      WebAudio
+    </label>
+    <label>
+      <input type="radio" name="mode" [(ngModel)]="audioMode" value="strudel" (change)="onAudioModeChange()">
+      Strudel
+    </label>
+
+    <!-- Waveform now calls setWaveform() to only touch osc in web mode -->
+    <label>Waveform
+      <select [(ngModel)]="waveform" (change)="setWaveform(waveform)">
+        <option value="sine">sine</option>
+        <option value="sawtooth">sawtooth</option>
+        <option value="triangle">triangle</option>
+        <option value="square">square</option>
+      </select>
+    </label>
+    <label>Pitch Range (st) <input [(ngModel)]="pitchRange" max="84" min="12" step="1" type="range"></label>
+    <label>Smooth <input [(ngModel)]="smooth" max="0.95" min="0" step="0.01" type="range"></label>
+    <label>Gain Max <input [(ngModel)]="gainMax" max="1" min="0.1" step="0.01" type="range"></label>
+
+    @if (this.audioMode === "web") {
+      <span class="stats">Freq: {{ freqDisp }} Hz | MIDI: {{ midiDisp }} | Gain: {{ gainPct }}
+        %</span>
+    }
+
+  </div>
+</div>
+
+<div class="buttons">
+  @if (started) {
+    <button (click)="stop()" [disabled]="!started">Stop</button>
+  } @else {
+    <button (click)="start()" [disabled]="started">Start</button>
+  }
+</div>
+
+
+<div class="stage">
+  <video #video muted playsinline></video>
+  <canvas #overlay></canvas>
+</div>

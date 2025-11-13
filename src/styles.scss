@@ -1,0 +1,54 @@
+/* Make the page fill the viewport */
+html, body { font-family: 'Liberation Sans'; height: 100%; margin: 0; }
+
+/* Split view */
+.container {
+  display: flex;
+  height: 100vh;        /* full height */
+  overflow: hidden;     /* prevent page scrollbars */
+}
+
+/* Both panes, 50/50 */
+.pane {
+  flex: 0 0 50%;
+  display: flex;        /* so children can stretch vertically */
+  flex-direction: column;
+  min-height: 0;        /* <-- crucial for scroll inside flex items */
+  min-width: 0;
+}
+
+/* LEFT: Strudel editor column should scroll */
+.pane.top {
+  overflow: hidden;     /* the inner scroller will handle the scroll */
+}
+
+/* Make <strudel-editor> fill the pane */
+.pane.top strudel-editor {
+  background: #222;
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+.pane.top .cm-editor {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+.pane.top .cm-scroller {
+  overflow: auto !important;
+  height: 100%;
+}
+
+/* RIGHT pane*/
+.pane.bottom {
+  overflow: auto;
+}
+
+@media (max-width: 900px) {
+  .container { flex-direction: column; }
+  .pane { flex: 0 0 auto; width: 100%; min-height: 50vh; }
+}
