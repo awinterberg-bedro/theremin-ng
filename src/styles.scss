@@ -24,13 +24,13 @@ html, body { height: 100%; margin: 0; }
 
 /* Make <strudel-editor> fill the pane */
 .pane.top strudel-editor {
+  background: #222;
   display: flex;
   flex: 1 1 auto;
   min-height: 0;
   min-width: 0;
 }
 
-/* CodeMirror sizing + scrolling */
 .pane.top .cm-editor {
   display: flex;
   flex: 1 1 auto;
@@ -39,14 +39,13 @@ html, body { height: 100%; margin: 0; }
 }
 
 .pane.top .cm-scroller {
-  /* this is the actual scroll area */
   overflow: auto !important;
   height: 100%;
 }
 
-/* RIGHT pane – keep your app as-is */
+/* RIGHT pane*/
 .pane.bottom {
-  overflow: auto;  /* or hidden, your choice */
+  overflow: auto;
 }
 
 /* Optional: stack on small screens */
